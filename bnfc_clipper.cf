@@ -1,4 +1,5 @@
 -- BNFC parser for the language "ModClipper".
+-- Author: Lucas S. Queiroz - Firemanarg
 
 Program.	Prog		::=	[PreMain] MainFunc [Func] ;
 
@@ -30,12 +31,9 @@ rules		FuncReturn	::=	"RETURN" | "RETURN" "(" Exp ")" ;
 
 -- Identifiers
 EmptyTkn.	Empty		::=	"" ;
--- rules		ArrIdent	::=	Empty
--- 							| "[" Integer "]"
--- 							| "[" Ident "]" ;
-ArrIntId.	ArrIdent	::=	"[" Integer "]" ;
-ArrId.		ArrIdent	::=	"[" Ident "]" ;
-EmptyArrId.	ArrIdent	::=	Empty ;
+rules		ArrIdent	::=	Empty
+							| "[" Integer "]"
+							| "[" Ident "]" ;
 
 -- Assignments
 AssignCmd.	Stm			::=	Assign ;
