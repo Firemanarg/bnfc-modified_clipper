@@ -1,0 +1,24 @@
+FUNCTION main()
+	local a := 1
+	local b := 4
+
+	IF (checker(a, b))
+		print("a is less than or equal to b\n")
+	ELSE
+		print("a is greater than b\n")
+	ENDIF
+	RETURN
+
+
+FUNCTION checker(a, b)
+	local result
+	IF (a <= b)
+		IF (a == b)
+			result = FALSE
+		ELSE
+			result = TRUE
+		ENDIF
+	ELSE
+		result = TRUE
+	ENDIF
+	RETURN (result)

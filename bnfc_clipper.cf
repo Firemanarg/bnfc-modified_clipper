@@ -1,0 +1,105 @@
+-- BNFC parser for the language "ModClipper".
+
+Program.	Prog		::=	[PreMain] MainFunc [Func] ;
+
+-- Functions
+MainFDecl.	MainFunc	::=	"FUNCTION" "main" "(" ")" [Stm] "RETURN" ;
+FuncDecl.	Func		::=	"FUNCTION" Ident "(" FDeclArgs ")" [Stm] FuncReturn ;
+rules		FuncReturn	::=	"RETURN" | "RETURN" "(" Exp ")" ;
+
+-- Terminals
+[].			[Func]		::= ;
+(:).		[Func]		::= Func [Func] ;
+[].			[Stm]		::= ;
+(:).		[Stm]		::= Stm [Stm] ;
+[].			[IfStm]		::= ;
+(:).		[IfStm]		::= IfStm [IfStm] ;
+[].			[Ident]		::= ;
+(:).		[Ident]		::= Ident [Ident] ;
+[].			[Exp]		::= ;
+(:).		[Exp]		::= Exp [Exp] ;
+[].			[GlobalVar]	::= ;
+(:).		[GlobalVar]	::= GlobalVar [GlobalVar] ;
+[].			[ConstDecl]	::= ;
+(:).		[ConstDecl]	::= ConstDecl [ConstDecl] ;
+[].			[PreMain]	::= ;
+(:).		[PreMain]	::= PreMain [PreMain] ;
+[].			[ArrIdent]	::= ;
+(:).		[ArrIdent]	::= ArrIdent [ArrIdent] ;
+
+
+-- Identifiers
+EmptyTkn.	Empty		::=	"" ;
+-- rules		ArrIdent	::=	Empty
+-- 							| "[" Integer "]"
+-- 							| "[" Ident "]" ;
+ArrIntId.	ArrIdent	::=	"[" Integer "]" ;
+ArrId.		ArrIdent	::=	"[" Ident "]" ;
+EmptyArrId.	ArrIdent	::=	Empty ;
+
+-- Assignments
+AssignCmd.	Stm			::=	Assign ;
+IncAssign.	Assign		::=	Ident [ArrIdent] "+=" Exp ;
+DecAssign.	Assign		::=	Ident [ArrIdent] "-=" Exp ;
+ValAssign.	Assign		::=	Ident [ArrIdent] "=" Exp ;
+
+-- Variable Declarations
+LVarDecl.	Stm			::=	"local" Ident [ArrIdent] ;
+LVarAttr.	Stm			::=	"local" Ident [ArrIdent] ":=" Exp ;
+CDecl.		ConstDecl	::=	"const" Ident [ArrIdent] ":=" Exp ;
+CStmDecl.	Stm			::=	ConstDecl ;
+GVarDecl.	GlobalVar	::=	"global" Ident [ArrIdent] ;
+GVarAttr.	GlobalVar	::=	"global" Ident [ArrIdent] ":=" Exp ;
+rules		PreMain		::=	[ConstDecl] | [GlobalVar] ;
+
+-- Commands
+FuncCmd.	FuncCall	::=	Ident "(" FCallArgs ")" ;
+FCASingle.	FCallArgs	::=	Exp ;
+FCAMulti.	FCallArgs	::=	Exp "," FCallArgs ;
+FDASingle.	FDeclArgs	::=	Ident ;
+FDAMulti.	FDeclArgs	::=	Ident "," FDeclArgs ;
+FuncStm.	Stm			::=	FuncCall ;
+PrintCmd.	Stm			::=	"PRINT" "(" Exp ")" ;
+PrintECmd.	Stm			::=	"PRINT" "(" ")" ;
+IfCmd.		Stm			::=	"IF" "(" LExp ")" [Stm] [IfStm] "ENDIF" ;
+ElseIf.		IfStm		::=	"ELSEIF" "(" LExp ")" [Stm] ;
+Else.		IfStm		::=	"ELSE" [Stm] ;
+WhileCmd.	Stm			::=	"WHILE" "(" LExp ")" [Stm] "ENDWHILE" ;
+ForCmd.		Stm			::=	"FOR" "(" Assign ";" LExp ";" Assign ")" [Stm] "ENDFOR" ;
+Label.		Stm			::=	Ident ":" ;
+Goto.		Stm			::=	"GOTO" Ident ;
+
+-- General Expressions
+rules		Exp			::=	LExp
+							| AExp
+							| String
+							| Ident
+							| "(" Exp ")"
+							| ArrayExp ;
+rules		ArrayExpVal	::=	Exp | Exp "," ArrayExpVal ;
+rules		ArrayExp	::=	"{" ArrayExpVal "}" ;
+
+-- Arithmetical Expressions
+AExp01.		AExp		::=	AExp1 ;
+AExpDiv.	AExp		::=	AExp "/" AExp1 ;
+AExpMul.	AExp		::=	AExp "*" AExp1 ;
+AExp12.		AExp1 		::=	AExp2 ;
+AExpAdd.	AExp1 		::=	AExp1 "+" AExp2 ;
+AExpSub.	AExp1 		::=	AExp1 "-" AExp2 ;
+rules		AExp2		::= Integer
+							| Double
+							| Ident
+							| "(" AExp ")" ;
+
+-- Logical Expressions
+LEq.		LExp1		::=	Exp "==" Exp ;
+LNEq.		LExp1		::=	Exp "!=" Exp ;
+LLess.		LExp1		::=	Exp "<" Exp ;
+LLessEq.	LExp1		::=	Exp "<=" Exp ;
+LMore.		LExp1		::=	Exp ">" Exp ;
+LMoreEq.	LExp1		::=	Exp ">=" Exp ;
+rules		LExp		::=	LExp1
+							| "TRUE"
+							| "FALSE"
+							| FuncCall
+							| "(" LExp ")" ;

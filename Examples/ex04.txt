@@ -1,0 +1,16 @@
+FUNCTION main()
+	PRINT("FIBONACCI 20: ")
+	PRINT(fibonacci(20))
+	PRINT("\n")
+	RETURN
+
+FUNCTION fibonacci(limit)
+	local a := 0
+	local b := 1
+	local c
+	WHILE (a < limit)
+		c = a + b
+		a = b
+		b = c
+	ENDWHILE
+	RETURN (b)

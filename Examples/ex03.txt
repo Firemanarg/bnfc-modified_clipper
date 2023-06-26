@@ -1,0 +1,15 @@
+FUNCTION main()
+	PRINT("COUNT TO 10:\n")
+	local i
+	FOR (i = 1; i <= 10; i = i + 1)
+		PRINT(i)
+		PRINT("\n")
+	ENDFOR
+	PRINT("COUNT TO 10 AGAIN:\n")
+	i = 1
+	WHILE (i <= 10)
+		PRINT(i)
+		PRINT("\n")
+		i = i + 1
+	ENDWHILE
+	RETURN

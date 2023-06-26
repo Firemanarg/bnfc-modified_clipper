@@ -1,0 +1,14 @@
+global PI := 3.14
+
+FUNCTION main()
+	local radius := 3
+	local area
+	area = PI * radius * radius
+	IF (area > 10)
+		PRINT ("Maior do que a area permitida!\n")
+	ELSEIF (area > 5)
+		PRINT ("Dentro da area permitida!\n")
+	ELSE
+		PRINT ("Menor do que a area permitida!\n")
+	ENDIF
+	RETURN
